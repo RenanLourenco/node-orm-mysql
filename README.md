@@ -50,5 +50,6 @@ Shortly thereafter insert the command to show the tables we create:
 
     show tables;
 
-Now we can verify the model of the table with the command: describe Pessoas;
+Now we can verify the model of the table with the command: 
 
+    describe Pessoas;
