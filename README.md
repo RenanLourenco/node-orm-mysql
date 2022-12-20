@@ -37,19 +37,15 @@ npx sequelize-cli model:create --name Matrículas --attributes status:string
 
 We can migrate to our database with the command:
 
-  npx sequelize-cli db:migrate
+    npx sequelize-cli db:migrate
 
-After that we migrate our data to the database
+After that we migrate our data to the database, to verify if everything works fine inser this command to the CLI of your database:
 
-To verify if everything works fine:
+    use escola-ingles;
 
-In CLI of your database insert this command:
+Shortly thereafter insert the command to show the tables we create:
 
-  use escola-ingles;
-
-shortly thereafter insert the command to show the tables we create:
-
-  show tables;
+    show tables;
 
 Now we can verify the model of the table with the command: describe Pessoas;
 
