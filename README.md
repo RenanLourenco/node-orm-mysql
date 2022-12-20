@@ -27,9 +27,9 @@ We need to create our tables based on this diagram
 
 ![Click Here](https://github.com/RenanLourenco/node-orm-mysql/blob/main/image.png)
 
-Based in the diagram: 
-npx sequelize-cli model:create --name Pessoas --attributes nome:string,ativo:boolean,email:string,role:string 
-npx sequelize-cli model:create --name Turmas --attributes data_inicio:dateonly  
+Based in the diagram:  
+npx sequelize-cli model:create --name Pessoas --attributes nome:string,ativo:boolean,email:string,role:string   
+  npx sequelize-cli model:create --name Turmas --attributes data_inicio:dateonly  
 npx sequelize-cli model:create --name Níveis --attributes descr_nivel:string  
 npx sequelize-cli model:create --name Matrículas --attributes status:string 
 
