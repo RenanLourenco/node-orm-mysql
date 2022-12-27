@@ -6,6 +6,7 @@ const router = Router()
 router.get('/class',TurmaController.getAllClasses)
 router.get('/class/:id',TurmaController.getOneClass)
 router.post('/class',TurmaController.postClass)
+router.post('/class/:id/restore',TurmaController.restoreClass)
 router.put('/class/:id',TurmaController.updateClass)
 router.delete('/class/:id',TurmaController.deleteClass)
 
