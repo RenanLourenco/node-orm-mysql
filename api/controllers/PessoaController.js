@@ -1,92 +1,99 @@
 const database = require('../models')
+const Sequelize = require('sequelize')
+const { PessoasServices,MatrículasServices } = require('../services')
+const pessoasServices = new PessoasServices()
+const matriculasServices = new MatrículasServices()
 
 class PersonController{
-    static async getAllPeople(req,res){
+    //refatorado
+    static async getAllActivePeople(req,res){
         try {
-            const allPeople = await database.Pessoas.findAll()
+            const allPeople = await pessoasServices.getActiveRegisters()
             return res.status(200).json(allPeople)
         } catch (error) {
             return res.status(400).send({message:error.message})
         }
         
     }
+    //refatorado
+    static async getAllPeople(req,res){
+        try {
+            const allPeople = await pessoasServices.getAllRegisters()
+            return res.status(200).json(allPeople)
+        } catch (error) {
+            return res.status(400).send({message:error.message})
+        }
+        
+    }
+    //refatorado
+    //just get if the person is active
     static async getOnePerson(req,res){
         const {id} = req.params
         try {
-            const UmaPessoa = await database.Pessoas.findOne({where: {id: Number(id)}})
+            console.log(id)
+            const UmaPessoa = await pessoasServices.getOneRegister(id);
             return res.status(200).json(UmaPessoa)
         } catch (error) {
             return res.status(400).send({message:error.message})
         }
     }
-    static async getOneEnroll(req,res){
-        const {estudante_Id,matriculaId} = req.params
+    //refatorado
+    static async restorePerson(req,res){
+        const { id } = req.params
         try {
-            const enroll = await database.Matrículas.findOne({where:{id:Number(matriculaId), estudante_Id:Number(estudante_Id)}})
-            return res.status(200).json(enroll)
-        } catch (error) {
-            return res.status(400).send({message:error.message})
-        }
-    }
-    static async createEnroll(req,res){
-        const { estudante_Id } = req.params
-        const newEnroll = {...req.body, estudante_id:Number(estudante_Id)}
-        try {
-            const enroll = await database.Matrículas.create(newEnroll)
-            return res.status(200).json(enroll)
+            await pessoasServices.registerRestore(id)
+            return res.status(200).send({message:`O Registro da Pessoa com o Id: ${id} foi restaurado`})
         } catch (error) {
             return res.status(500).send({message:error.message})
         }
     }
+
+    
+    //refatorado
     static async createPerson(req,res){
         const newPerson = req.body
         try {
-            const newPersonCreated = await database.Pessoas.create(newPerson)
+            const newPersonCreated = await pessoasServices.registerCreate(newPerson)
             return res.status(201).json(newPersonCreated)
 
         } catch (error) {
             return res.status(400).send({message:error.message})
         }
     }
-    static async updateEnroll(req,res){
-        const {estudante_Id,matriculaId} = req.params
-        const newInfo = req.body
-        try {
-            await database.Matrículas.update(newInfo,{where:{id:Number(matriculaId),estudante_id:Number(estudante_Id)}})
-            const updatedEnroll = await database.Matrículas.findOne({where:{id:Number(matriculaId)}})
-            return res.status(200).json(updatedEnroll)
-        } catch (error) {
-            return res.status(400).send({message:error.message})
-        }
-    }
-    static async deleteEnroll(req,res){
-        const {estudante_Id,matriculaId} = req.params
-        try {
-            await database.Matrículas.destroy({where:{id:Number(matriculaId)}})
-            return res.status(200).send({message:`A matricula com o Id: ${matriculaId} foi deletado do banco de dados`})
-        } catch (error) {
-            return res.status(400).send({message:error.message})
-        }
-    }
+   
+    //refatorado
+    //only update if the person is active
     static async updatePerson(req,res){
         const { id } = req.params
         const newInfo = req.body
         try {
-            await database.Pessoas.update(newInfo, { where : {id:Number(id)}})
-            const updatedPerson = await database.Pessoas.findOne({where: {id: Number(id)}})
+            await pessoasServices.registerUpdate(newInfo,id)
+            const updatedPerson = await database.Pessoas.findOne({where:{id:id}})
             return res.status(200).json(updatedPerson)
         } catch (error) {
             return res.status(400).send({message:error.message})
         }
     }
+    //refatorado
     static async deletePerson(req,res){
         const { id } = req.params
         try {
-            const deletedPerson = await database.Pessoas.findOne({where: {id:Number(id)}})
-            await database.Pessoas.destroy({where :{id:Number(id)}})
+            const deletedPerson = await pessoasServices.getOneRegister(id)
+            await pessoasServices.registerDelete(id)
             return res.status(200).json(deletedPerson)
         } catch (error) {
             return res.status(400).send({message:error.message})
+        }
+    }
+    
+    //refatorado
+    static async cancelPerson(req,res){
+        const {estudante_Id} = req.params
+        try{
+            await pessoasServices.cancelPersonAndEnroll(Number(estudante_Id))
+            return res.status(200).json({message:`matriculas referente a estudante ${estudante_Id} canceladas`})
+        }catch (error){
+            return res.status(500).json(error.message)
         }
     }
 
