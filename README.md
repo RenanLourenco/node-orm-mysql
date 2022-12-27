@@ -1,5 +1,11 @@
 # node-orm-mysql
 
+#Change-log
+
+- 27/12/2022
+Create Services, transfer database of controller to the services, update controllers to access services, create specific services inherit methods from principal class and connect services between them.
+
+
 # Objectives
 
 - Create an API with Sequelize
